@@ -1,24 +1,4 @@
-function minMaxDiff(line) {
-  return Math.max(...line) - Math.min(...line);
-}
-
-function solution(input) {
-  const matrix = input.split('\n').map(line => line.split(/\s/));
-  const lineSum = matrix.map(l => minMaxDiff(l));
-  return lineSum.reduce((a, b) => a + b, 0);
-}
-
-it('should run the example', () => {
-  expect(
-    solution(`5 1 9 5
-7 5 3
-2 4 6 8`),
-  ).toBe(18);
-});
-
-it('should get the solution', () => {
-  console.log(
-    solution(`1208	412	743	57	1097	53	71	1029	719	133	258	69	1104	373	367	365
+const data = `1208	412	743	57	1097	53	71	1029	719	133	258	69	1104	373	367	365
 4011	4316	1755	4992	228	240	3333	208	247	3319	4555	717	1483	4608	1387	3542
 675	134	106	115	204	437	1035	1142	195	1115	569	140	1133	190	701	1016
 4455	2184	5109	221	3794	246	5214	4572	3571	3395	2054	5050	216	878	237	3880
@@ -33,7 +13,62 @@ it('should get the solution', () => {
 168	2683	1480	200	1666	1999	3418	2177	156	430	2959	3264	2989	136	110	3526
 8702	6973	203	4401	8135	7752	1704	8890	182	9315	255	229	6539	647	6431	6178
 2290	157	2759	3771	4112	2063	153	3538	3740	130	3474	1013	180	2164	170	189
-525	1263	146	954	188	232	1019	918	268	172	1196	1091	1128	234	650	420
-`),
+525	1263	146	954	188	232	1019	918	268	172	1196	1091	1128	234	650	420`;
+
+function minMaxDiff(line) {
+  return Math.max(...line) - Math.min(...line);
+}
+
+function toMatrix(input) {
+  return input.split('\n').map(line => line.split(/\s/));
+}
+
+function solution(input) {
+  const matrix = toMatrix(input);
+  const lineSum = matrix.map(l => minMaxDiff(l));
+  return lineSum.reduce((a, b) => a + b, 0);
+}
+
+it('should run the example', () => {
+  expect(
+    solution(`5 1 9 5
+7 5 3
+2 4 6 8`),
+  ).toBe(18);
+});
+
+it('should get the solution', () => {
+  console.log(solution(data));
+});
+
+function solution2(input) {
+  const matrix = toMatrix(input);
+  const lineSum = matrix.map(l =>
+    Math.max(
+      ...l.map((n, i) =>
+        Math.max(
+          ...l.map((n2, i2) => {
+            if (i === i2 || n % n2 !== 0) {
+              return 0;
+            }
+            return n / n2;
+          }),
+        ),
+      ),
+    ),
   );
+  console.log(lineSum);
+  return lineSum.reduce((a, b) => a + b, 0);
+}
+
+it('should run example 2', () => {
+  expect(
+    solution2(`5 9 2 8
+9 4 7 3
+3 8 6 5`),
+  ).toBe(9);
+});
+
+it('should get the solution 2', () => {
+  console.log(solution2(data));
 });
